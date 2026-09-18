@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng Theo Dõi Thử Thách Xây Kênh 7 Tuần (08/09 - 26/10/2026)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .thumbnail-img {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .thumbnail-img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-20">
+
+  <!-- TOP HEADER -->
+  <header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-blue-800 text-white shadow-xl sticky top-0 z-40 border-b border-blue-700/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div class="flex items-center space-x-3">
+          <div class="p-2.5 bg-blue-600/40 rounded-xl border border-blue-400/30 shadow-inner">
+            <i data-lucide="sparkles" class="w-6 h-6 text-amber-300"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-lg md:text-xl font-extrabold tracking-tight">THỬ THÁCH XÂY KÊNH 7 TUẦN (49 NGÀY)</h1>
+              <span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-2xs font-bold rounded-full border border-emerald-400/30 uppercase tracking-wide">08/09 - 26/10/2026</span>
+            </div>
+            <p class="text-xs text-blue-200 mt-0.5">Bảng Báo Cáo & Quản Lý Dán Link + Hình Ảnh Minh Chứng 9 Thành Viên</p>
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="exportDataJSON()" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5">
+            <i data-lucide="download" class="w-4 h-4"></i> Sao lưu (JSON)
+          </button>
+          <label class="px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-semibold rounded-xl cursor-pointer transition-all flex items-center gap-1.5">
+            <i data-lucide="upload" class="w-4 h-4"></i> Nhập dữ liệu
+            <input type="file" id="importFile" class="hidden" accept=".json" onchange="importDataJSON(event)">
+          </label>
+          <button onclick="window.print()" class="px-3.5 py-1.5 bg-blue-500 hover:bg-blue-400 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-1.5">
+            <i data-lucide="printer" class="w-4 h-4"></i> In bảng theo dõi
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+
+    <!-- KPI STATS -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3.5">
+        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
+          <i data-lucide="users" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 font-medium">9 Thành viên tham gia</p>
+          <p class="text-base sm:text-lg font-bold text-slate-900">Nhóm Xây Kênh 7W</p>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3.5">
+        <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
+          <i data-lucide="calendar" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 font-medium">Bắt đầu từ hôm nay</p>
+          <p class="text-base sm:text-lg font-bold text-indigo-600">08/09/2026</p>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3.5">
+        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
+          <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 font-medium">Nhiệm vụ / ngày</p>
+          <p class="text-base sm:text-lg font-bold text-emerald-600">1 Reel + 2 Post + 1 Bài</p>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3.5">
+        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl">
+          <i data-lucide="image" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 font-medium">Hỗ trợ minh chứng</p>
+          <p class="text-base sm:text-lg font-bold text-amber-600">Link & Ảnh Chụp</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUIDE TIP -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-4">
+      <div class="flex items-start gap-3">
+        <div class="p-2 bg-blue-600 text-white rounded-xl shadow-sm mt-0.5">
+          <i data-lucide="camera" class="w-5 h-5"></i>
+        </div>
+        <div class="flex-1 text-xs text-slate-700">
+          <span class="font-bold text-blue-950 text-sm">💡 Tính năng Dán Link & Đính kèm Ảnh:</span>
+          <p class="mt-1 leading-relaxed">
+            Mỗi nhiệm vụ có thể <b>dán đường link Facebook</b> và <b>tải ảnh chụp màn hình bài đăng</b> (hỗ trợ chọn file ảnh từ máy hoặc điện thoại). Nhấn vào ảnh xem trước để phóng to. Tỷ lệ hoàn thành sẽ tự động cập nhật ngay khi bạn điền link hoặc tải ảnh!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD TABLE -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+      <div class="px-5 py-3.5 bg-slate-50/90 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <i data-lucide="trophy" class="w-5 h-5 text-amber-500"></i>
+          <h2 class="text-sm sm:text-base font-bold text-slate-900">Bảng Xếp Hạng & Tiến Độ 9 Thành Viên (49 Ngày)</h2>
+        </div>
+        <span class="text-xs text-slate-500 bg-white px-3 py-1 rounded-full border border-slate-200 font-medium">Tự động tính theo thời gian thực</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead class="bg-slate-100/80 text-slate-600 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="px-3.5 py-3 text-center w-12">STT</th>
+              <th class="px-4 py-3">Họ và Tên</th>
+              <th class="px-3.5 py-3 text-center">Reels (49)</th>
+              <th class="px-3.5 py-3 text-center">Bài FB (98)</th>
+              <th class="px-3.5 py-3 text-center">Bài Tập (49)</th>
+              <th class="px-3.5 py-3 text-center">Tổng Đã Nộp</th>
+              <th class="px-4 py-3 w-48">Tiến Độ (%)</th>
+              <th class="px-4 py-3 text-center">Đánh Giá</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody" class="divide-y divide-slate-100 font-medium">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        
+        <!-- Week Tabs -->
+        <div class="flex flex-wrap items-center gap-1.5" id="weekTabsContainer">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Member Filter Dropdown -->
+        <div class="flex items-center gap-2">
+          <label class="text-xs font-semibold text-slate-600 whitespace-nowrap">Lọc theo thành viên:</label>
+          <select id="memberFilterSelect" onchange="changeFilter()" class="bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2">
+            <option value="ALL">🌟 Tất cả 9 thành viên</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DAILY ENTRIES LIST -->
+    <div class="space-y-5" id="dailyEntriesContainer">
+      <!-- Rendered by JS -->
+    </div>
+
+  </main>
+
+  <!-- LIGHTBOX MODAL TO VIEW FULL IMAGE -->
+  <div id="imageLightboxModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden" onclick="closeImageLightbox()">
+    <div class="relative max-w-4xl max-h-[90vh] p-2" onclick="event.stopPropagation()">
+      <button onclick="closeImageLightbox()" class="absolute -top-3 -right-3 bg-white text-slate-800 hover:bg-slate-200 rounded-full p-2 shadow-lg z-10">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <img id="lightboxImageSrc" src="" alt="Ảnh minh chứng" class="max-h-[85vh] w-auto rounded-xl shadow-2xl object-contain mx-auto border border-white/20">
+    </div>
+  </div>
+
+  <!-- MODAL: QUICK REPORT GENERATOR -->
+  <div id="reportModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <i data-lucide="copy" class="w-5 h-5 text-blue-600"></i> Mẫu Báo Cáo Nhóm (Zalo / Facebook)
+        </h3>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <textarea id="reportTextContent" rows="9" readonly class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-800 focus:outline-none"></textarea>
+      <div class="flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-xl">Đóng</button>
+        <button onclick="copyReportText()" class="px-4 py-2 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center gap-1.5 shadow-sm">
+          <i data-lucide="check" class="w-4 h-4"></i> Sao chép nội dung
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 transform transition-all duration-300 translate-y-20 opacity-0 z-50">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toastMsg">Đã cập nhật dữ liệu!</span>
+  </div>
+
+  <script>
+    const MEMBERS = [
+      "Nancy",
+      "Hoài Học Mãi",
+      "Lambee",
+      "Nhung Hoàng",
+      "Quỳnh Thu",
+      "TanAnh Pham",
+      "Thảo Collins Edu",
+      "Trần Quế Lam",
+      "Phạm Huyền"
+    ];
+
+    const START_DATE = new Date(2026, 8, 8); // 08/09/2026 (month is 0-indexed)
+    const DAYS_OF_WEEK = ["Chủ Nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
+    const STORAGE_KEY = "CHALLENGE_TRACKER_7_WEEKS_DATA_V2";
+
+    let state = {
+      currentWeek: 1,
+      currentMember: "ALL",
+      data: {} 
+      // key: `day_${dayNum}_${member}` -> {
+      //   reelLink: "", reelImg: "",
+      //   post1Link: "", post1Img: "",
+      //   post2Link: "", post2Img: "",
+      //   exerciseLink: "", exerciseImg: ""
+      // }
+    };
+
+    function initData() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          state.data = JSON.parse(saved);
+        } catch (e) {
+          state.data = {};
+        }
+      }
+    }
+
+    function saveData() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
+      } catch (e) {
+        console.warn("Storage quota warning", e);
+      }
+      renderLeaderboard();
+      showToast("Đã tự động lưu dữ liệu!");
+    }
+
+    function getEntry(day, member) {
+      const key = `day_${day}_${member}`;
+      return state.data[key] || {
+        reelLink: "", reelImg: "",
+        post1Link: "", post1Img: "",
+        post2Link: "", post2Img: "",
+        exerciseLink: "", exerciseImg: ""
+      };
+    }
+
+    function updateEntryField(day, member, field, value) {
+      const key = `day_${day}_${member}`;
+      if (!state.data[key]) {
+        state.data[key] = {
+          reelLink: "", reelImg: "",
+          post1Link: "", post1Img: "",
+          post2Link: "", post2Img: "",
+          exerciseLink: "", exerciseImg: ""
+        };
+      }
+      state.data[key][field] = value.trim();
+      saveData();
+    }
+
+    function handleImageUpload(day, member, field, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Compress / read as base64
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imgBase64 = e.target.result;
+        const key = `day_${day}_${member}`;
+        if (!state.data[key]) {
+          state.data[key] = {
+            reelLink: "", reelImg: "",
+            post1Link: "", post1Img: "",
+            post2Link: "", post2Img: "",
+            exerciseLink: "", exerciseImg: ""
+          };
+        }
+        state.data[key][field] = imgBase64;
+        saveData();
+        renderDays();
+        lucide.createIcons();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeImage(day, member, field) {
+      const key = `day_${day}_${member}`;
+      if (state.data[key]) {
+        state.data[key][field] = "";
+        saveData();
+        renderDays();
+        lucide.createIcons();
+      }
+    }
+
+    function openImageLightbox(imgSrc) {
+      document.getElementById("lightboxImageSrc").src = imgSrc;
+      document.getElementById("imageLightboxModal").classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    function closeImageLightbox() {
+      document.getElementById("imageLightboxModal").classList.add("hidden");
+    }
+
+    function getDateForDay(dayIndex1Based) {
+      const dt = new Date(START_DATE);
+      dt.setDate(dt.getDate() + (dayIndex1Based - 1));
+      const dayName = DAYS_OF_WEEK[dt.getDay()];
+      const d = String(dt.getDate()).padStart(2, '0');
+      const m = String(dt.getMonth() + 1).padStart(2, '0');
+      const y = dt.getFullYear();
+      return {
+        dateStr: `${d}/${m}/${y}`,
+        shortDate: `${d}/${m}`,
+        dayName: dayName
+      };
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      document.getElementById("toastMsg").innerText = msg;
+      toast.classList.remove("translate-y-20", "opacity-0");
+      setTimeout(() => {
+        toast.classList.add("translate-y-20", "opacity-0");
+      }, 2500);
+    }
+
+    function renderWeekTabs() {
+      const container = document.getElementById("weekTabsContainer");
+      let html = "";
+      for (let w = 1; w <= 7; w++) {
+        const dStart = getDateForDay((w - 1) * 7 + 1);
+        const dEnd = getDateForDay(w * 7);
+        const isActive = state.currentWeek === w;
+        html += `
+          <button onclick="setWeek(${w})" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+            isActive 
+              ? 'bg-blue-600 text-white shadow-md' 
+              : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+          }">
+            Tuần ${w} (${dStart.shortDate} - ${dEnd.shortDate})
+          </button>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    function renderMemberSelect() {
+      const select = document.getElementById("memberFilterSelect");
+      let options = `<option value="ALL">🌟 Tất cả 9 thành viên</option>`;
+      MEMBERS.forEach(m => {
+        options += `<option value="${m}">${m}</option>`;
+      });
+      select.innerHTML = options;
+    }
+
+    function setWeek(w) {
+      state.currentWeek = w;
+      renderWeekTabs();
+      renderDays();
+      lucide.createIcons();
+    }
+
+    function changeFilter() {
+      state.currentMember = document.getElementById("memberFilterSelect").value;
+      renderDays();
+      lucide.createIcons();
+    }
+
+    function renderLeaderboard() {
+      const tbody = document.getElementById("leaderboardBody");
+      let rows = "";
+
+      MEMBERS.forEach((m, idx) => {
+        let reelCount = 0;
+        let postCount = 0;
+        let exerciseCount = 0;
+
+        for (let d = 1; d <= 49; d++) {
+          const entry = getEntry(d, m);
+          if (entry.reelLink || entry.reelImg) reelCount++;
+          if (entry.post1Link || entry.post1Img) postCount++;
+          if (entry.post2Link || entry.post2Img) postCount++;
+          if (entry.exerciseLink || entry.exerciseImg) exerciseCount++;
+        }
+
+        const totalDone = reelCount + postCount + exerciseCount;
+        const totalTarget = 196;
+        const pct = Math.round((totalDone / totalTarget) * 100);
+
+        let badge = `<span class="px-2.5 py-0.5 bg-slate-100 text-slate-600 rounded-full text-xs font-semibold">Chưa bắt đầu</span>`;
+        if (pct >= 100) {
+          badge = `<span class="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">⭐ Xuất sắc (100%)</span>`;
+        } else if (pct >= 80) {
+          badge = `<span class="px-2.5 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">🔥 Rất tốt (>=80%)</span>`;
+        } else if (pct >= 40) {
+          badge = `<span class="px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-full text-xs font-bold">⚡ Đang tiến bộ</span>`;
+        } else if (totalDone > 0) {
+          badge = `<span class="px-2.5 py-0.5 bg-red-100 text-red-800 rounded-full text-xs font-bold">⚠️ Cần tăng tốc</span>`;
+        }
+
+        rows += `
+          <tr class="hover:bg-slate-50/80 transition-colors">
+            <td class="px-3.5 py-3 text-center text-slate-400 font-semibold">${idx + 1}</td>
+            <td class="px-4 py-3 font-bold text-slate-900">${m}</td>
+            <td class="px-3.5 py-3 text-center text-blue-600 font-semibold">${reelCount} / 49</td>
+            <td class="px-3.5 py-3 text-center text-indigo-600 font-semibold">${postCount} / 98</td>
+            <td class="px-3.5 py-3 text-center text-emerald-600 font-semibold">${exerciseCount} / 49</td>
+            <td class="px-3.5 py-3 text-center font-bold text-slate-900">${totalDone} <span class="text-xs font-normal text-slate-400">/ 196</span></td>
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-2.5">
+                <div class="flex-1 bg-slate-200 rounded-full h-2 overflow-hidden">
+                  <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                </div>
+                <span class="font-bold text-xs w-9 text-right">${pct}%</span>
+              </div>
+            </td>
+            <td class="px-4 py-3 text-center">${badge}</td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rows;
+    }
+
+    function renderDays() {
+      const container = document.getElementById("dailyEntriesContainer");
+      const startDay = (state.currentWeek - 1) * 7 + 1;
+      const endDay = state.currentWeek * 7;
+      let html = "";
+
+      const membersToDisplay = state.currentMember === "ALL" ? MEMBERS : [state.currentMember];
+
+      for (let d = startDay; d <= endDay; d++) {
+        const dtInfo = getDateForDay(d);
+
+        html += `
+          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+            <!-- DAY HEADER BAR -->
+            <div class="px-5 py-3 bg-gradient-to-r from-slate-900 to-slate-800 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <span class="px-2.5 py-0.5 bg-blue-500 text-white rounded-md text-xs font-bold">${dtInfo.dayName.toUpperCase()}</span>
+                <span class="text-blue-300 font-semibold text-xs">(${dtInfo.dateStr})</span>
+                <h3 class="text-sm font-bold tracking-wide">NGÀY ${String(d).padStart(2, '0')} / 49</h3>
+              </div>
+              <span class="text-xs text-slate-300">Tuần ${state.currentWeek} • Đầy đủ 4 nhiệm vụ (Kèm Link & Ảnh)</span>
+            </div>
+
+            <!-- MEMBER LIST -->
+            <div class="divide-y divide-slate-100 p-4 sm:p-5 space-y-4">
+        `;
+
+        membersToDisplay.forEach((m) => {
+          const entry = getEntry(d, m);
+          let doneCount = (
+            ((entry.reelLink || entry.reelImg) ? 1 : 0) +
+            ((entry.post1Link || entry.post1Img) ? 1 : 0) +
+            ((entry.post2Link || entry.post2Img) ? 1 : 0) +
+            ((entry.exerciseLink || entry.exerciseImg) ? 1 : 0)
+          );
+
+          let cardBorder = doneCount === 4 ? "border-emerald-200 bg-emerald-50/20" : "border-slate-200 bg-slate-50/40";
+
+          html += `
+            <div class="p-4 rounded-2xl border ${cardBorder} space-y-3.5 transition-all">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                    ${m.substring(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <span class="font-bold text-slate-900 text-sm sm:text-base">${m}</span>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${
+                    doneCount === 4 ? 'bg-emerald-100 text-emerald-800' : doneCount > 0 ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-600'
+                  }">
+                    ${doneCount === 4 ? '✅ Đủ 4 nhiệm vụ' : `⏳ Đạt ${doneCount}/4`}
+                  </span>
+                  <button onclick="openReportModal(${d}, '${m}')" class="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors">
+                    <i data-lucide="share-2" class="w-3.5 h-3.5"></i> Copy báo cáo
+                  </button>
+                </div>
+              </div>
+
+              <!-- 4 TASK GRIDS -->
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                
+                <!-- 1. Reel -->
+                <div class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-2xs space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="text-2xs font-bold text-blue-800 uppercase tracking-wider flex items-center gap-1">
+                      <i data-lucide="video" class="w-3.5 h-3.5 text-blue-600"></i> 1. Reel FB
+                    </label>
+                    ${entry.reelLink || entry.reelImg ? '<span class="text-emerald-600 text-2xs font-bold">✓ Đã nộp</span>' : ''}
+                  </div>
+                  <input type="url" placeholder="Dán link Reel..." value="${entry.reelLink || ''}" 
+                    onchange="updateEntryField(${d}, '${m}', 'reelLink', this.value)"
+                    class="w-full text-xs px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
+                  
+                  <!-- Image Slot -->
+                  <div class="pt-1 flex items-center justify-between gap-1.5">
+                    ${entry.reelImg ? `
+                      <div class="flex items-center gap-2">
+                        <img src="${entry.reelImg}" onclick="openImageLightbox('${entry.reelImg}')" class="w-9 h-9 object-cover rounded-lg border border-slate-300 cursor-pointer thumbnail-img shadow-xs" title="Xem ảnh">
+                        <button onclick="removeImage(${d}, '${m}', 'reelImg')" class="text-2xs text-red-500 hover:text-red-700 underline font-medium">Xóa ảnh</button>
+                      </div>
+                    ` : `
+                      <label class="cursor-pointer text-2xs text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1 bg-blue-50 px-2 py-1 rounded-md border border-blue-200/60">
+                        <i data-lucide="camera" class="w-3 h-3"></i> Tải ảnh minh chứng
+                        <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(${d}, '${m}', 'reelImg', event)">
+                      </label>
+                    `}
+                  </div>
+                </div>
+
+                <!-- 2. Post 1 -->
+                <div class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-2xs space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="text-2xs font-bold text-indigo-800 uppercase tracking-wider flex items-center gap-1">
+                      <i data-lucide="file-text" class="w-3.5 h-3.5 text-indigo-600"></i> 2. Bài Viết FB 1
+                    </label>
+                    ${entry.post1Link || entry.post1Img ? '<span class="text-emerald-600 text-2xs font-bold">✓ Đã nộp</span>' : ''}
+                  </div>
+                  <input type="url" placeholder="Dán link Bài 1..." value="${entry.post1Link || ''}" 
+                    onchange="updateEntryField(${d}, '${m}', 'post1Link', this.value)"
+                    class="w-full text-xs px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none">
+                  
+                  <div class="pt-1 flex items-center justify-between gap-1.5">
+                    ${entry.post1Img ? `
+                      <div class="flex items-center gap-2">
+                        <img src="${entry.post1Img}" onclick="openImageLightbox('${entry.post1Img}')" class="w-9 h-9 object-cover rounded-lg border border-slate-300 cursor-pointer thumbnail-img shadow-xs" title="Xem ảnh">
+                        <button onclick="removeImage(${d}, '${m}', 'post1Img')" class="text-2xs text-red-500 hover:text-red-700 underline font-medium">Xóa ảnh</button>
+                      </div>
+                    ` : `
+                      <label class="cursor-pointer text-2xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-200/60">
+                        <i data-lucide="camera" class="w-3 h-3"></i> Tải ảnh minh chứng
+                        <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(${d}, '${m}', 'post1Img', event)">
+                      </label>
+                    `}
+                  </div>
+                </div>
+
+                <!-- 3. Post 2 -->
+                <div class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-2xs space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="text-2xs font-bold text-indigo-800 uppercase tracking-wider flex items-center gap-1">
+                      <i data-lucide="file-text" class="w-3.5 h-3.5 text-indigo-600"></i> 3. Bài Viết FB 2
+                    </label>
+                    ${entry.post2Link || entry.post2Img ? '<span class="text-emerald-600 text-2xs font-bold">✓ Đã nộp</span>' : ''}
+                  </div>
+                  <input type="url" placeholder="Dán link Bài 2..." value="${entry.post2Link || ''}" 
+                    onchange="updateEntryField(${d}, '${m}', 'post2Link', this.value)"
+                    class="w-full text-xs px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none">
+                  
+                  <div class="pt-1 flex items-center justify-between gap-1.5">
+                    ${entry.post2Img ? `
+                      <div class="flex items-center gap-2">
+                        <img src="${entry.post2Img}" onclick="openImageLightbox('${entry.post2Img}')" class="w-9 h-9 object-cover rounded-lg border border-slate-300 cursor-pointer thumbnail-img shadow-xs" title="Xem ảnh">
+                        <button onclick="removeImage(${d}, '${m}', 'post2Img')" class="text-2xs text-red-500 hover:text-red-700 underline font-medium">Xóa ảnh</button>
+                      </div>
+                    ` : `
+                      <label class="cursor-pointer text-2xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-200/60">
+                        <i data-lucide="camera" class="w-3 h-3"></i> Tải ảnh minh chứng
+                        <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(${d}, '${m}', 'post2Img', event)">
+                      </label>
+                    `}
+                  </div>
+                </div>
+
+                <!-- 4. Exercise -->
+                <div class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-2xs space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="text-2xs font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-1">
+                      <i data-lucide="check-square" class="w-3.5 h-3.5 text-emerald-600"></i> 4. Bài Tập Nhóm
+                    </label>
+                    ${entry.exerciseLink || entry.exerciseImg ? '<span class="text-emerald-600 text-2xs font-bold">✓ Đã nộp</span>' : ''}
+                  </div>
+                  <input type="url" placeholder="Dán link Bài tập..." value="${entry.exerciseLink || ''}" 
+                    onchange="updateEntryField(${d}, '${m}', 'exerciseLink', this.value)"
+                    class="w-full text-xs px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none">
+                  
+                  <div class="pt-1 flex items-center justify-between gap-1.5">
+                    ${entry.exerciseImg ? `
+                      <div class="flex items-center gap-2">
+                        <img src="${entry.exerciseImg}" onclick="openImageLightbox('${entry.exerciseImg}')" class="w-9 h-9 object-cover rounded-lg border border-slate-300 cursor-pointer thumbnail-img shadow-xs" title="Xem ảnh">
+                        <button onclick="removeImage(${d}, '${m}', 'exerciseImg')" class="text-2xs text-red-500 hover:text-red-700 underline font-medium">Xóa ảnh</button>
+                      </div>
+                    ` : `
+                      <label class="cursor-pointer text-2xs text-emerald-600 hover:text-emerald-800 font-semibold flex items-center gap-1 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200/60">
+                        <i data-lucide="camera" class="w-3 h-3"></i> Tải ảnh minh chứng
+                        <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(${d}, '${m}', 'exerciseImg', event)">
+                      </label>
+                    `}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function openReportModal(day, member) {
+      const entry = getEntry(day, member);
+      const dtInfo = getDateForDay(day);
+      const text = `🔥 BÁO CÁO THỬ THÁCH XÂY KÊNH 7 TUẦN
+📅 Ngày ${day}/49 - ${dtInfo.dayName} (${dtInfo.dateStr})
+👤 Thành viên: ${member}
+----------------------------------------
+1. 🎬 Reel Facebook:
+Link: ${entry.reelLink || '(Chưa có link)'}
+${entry.reelImg ? '📸 Minh chứng: Đã đính kèm ảnh' : ''}
+
+2. 📝 Bài viết Facebook (1):
+Link: ${entry.post1Link || '(Chưa có link)'}
+${entry.post1Img ? '📸 Minh chứng: Đã đính kèm ảnh' : ''}
+
+3. 📝 Bài viết Facebook (2):
+Link: ${entry.post2Link || '(Chưa có link)'}
+${entry.post2Img ? '📸 Minh chứng: Đã đính kèm ảnh' : ''}
+
+4. 🎯 Bài tập nhóm:
+Link: ${entry.exerciseLink || '(Chưa có link)'}
+${entry.exerciseImg ? '📸 Minh chứng: Đã đính kèm ảnh' : ''}
+----------------------------------------
+✅ Quyết tâm kỷ luật - Hoàn thành 100% mục tiêu! 💪`;
+
+      document.getElementById("reportTextContent").value = text;
+      document.getElementById("reportModal").classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      document.getElementById("reportModal").classList.add("hidden");
+    }
+
+    function copyReportText() {
+      const textarea = document.getElementById("reportTextContent");
+      textarea.select();
+      document.execCommand("copy");
+      showToast("Đã copy báo cáo vào bộ nhớ tạm!");
+      closeModal();
+    }
+
+    function exportDataJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state.data, null, 2));
+      const dlAnchor = document.createElement("a");
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", `Du_Lieu_Thu_Thach_7_Tuan_${new Date().toISOString().slice(0,10)}.json`);
+      dlAnchor.click();
+    }
+
+    function importDataJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          state.data = imported;
+          saveData();
+          renderDays();
+          showToast("Nhập dữ liệu thành công!");
+        } catch (err) {
+          alert("Tệp dữ liệu không hợp lệ!");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      initData();
+      renderWeekTabs();
+      renderMemberSelect();
+      renderLeaderboard();
+      renderDays();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

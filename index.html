@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Quản Lý & Theo Dõi Danh Mục Đầu Tư Vàng - Bạc | Phạm Huyền</title>
+  
+  <!-- PWA & Mobile Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d49a17">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Vàng Bạc">
+  
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Chart.js & SheetJS (Excel) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <header>
+      <div class="brand-section">
+        <div class="brand-icon">
+          <i class="fas fa-coins"></i>
+        </div>
+        <div class="brand-title">
+          <h1>Huyền Gold & Silver Tracker</h1>
+          <p>Hệ thống Quản lý Danh mục & Theo dõi Giá Sàn Vàng Bạc Thông Minh</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-theme-toggle" id="theme-toggle-btn" title="Chuyển chế độ Sáng / Tối" onclick="toggleTheme()">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="btn btn-gold" onclick="openAddModal()">
+          <i class="fas fa-plus-circle"></i> Thêm Giao Dịch
+        </button>
+        <button class="btn btn-silver" id="btn-sync-sheets" onclick="syncToGoogleSheets()">
+          <i class="fas fa-cloud-upload-alt"></i> Sync Google Sheets
+        </button>
+        <button class="btn btn-glass" onclick="exportToExcel()">
+          <i class="fas fa-file-excel" style="color: #10b981;"></i> Xuất Excel
+        </button>
+        <button class="btn btn-glass" id="btn-refresh-prices" onclick="refreshMarketPrices()">
+          <i class="fas fa-sync-alt"></i> Làm mới giá sàn
+        </button>
+      </div>
+    </header>
+
+    <!-- Live Ticker Bar -->
+    <div class="live-bar">
+      <div class="live-bar-title">
+        <div class="pulse-dot"></div>
+        <span>Giá Sàn Trực Tuyến:</span>
+      </div>
+      <div class="ticker-items" id="ticker-items">
+        <!-- Javascript renders ticker items -->
+      </div>
+    </div>
+
+    <!-- KPI Summary Grid -->
+    <div class="kpi-grid">
+      
+      <!-- Tổng Tài Sản Ròng -->
+      <div class="kpi-card total-card">
+        <div class="kpi-header">
+          <span class="kpi-title">Tổng Giá Trị Danh Mục</span>
+          <span class="kpi-badge badge-gold" id="kpi-total-roi">+0.00%</span>
+        </div>
+        <div class="kpi-value" id="kpi-total-value">0 ₫</div>
+        <div class="kpi-sub">
+          <span>Tổng vốn: <strong class="highlight" id="kpi-total-cost">0 ₫</strong></span>
+          <span>Lời/Lỗ: <strong class="highlight" id="kpi-total-profit">0 ₫</strong></span>
+        </div>
+      </div>
+
+      <!-- Danh Mục Vàng -->
+      <div class="kpi-card gold-card">
+        <div class="kpi-header">
+          <span class="kpi-title">Tài Sản Vàng (BTMH Gift, DOJI, BTMC)</span>
+          <span class="kpi-badge badge-gold" id="kpi-gold-roi">+0.00%</span>
+        </div>
+        <div class="kpi-value" id="kpi-gold-value">0 ₫</div>
+        <div class="kpi-sub">
+          <span>Khối lượng: <strong class="highlight" id="kpi-gold-qty">0 phân</strong></span>
+          <span>Lãi ròng: <strong class="highlight" id="kpi-gold-profit">0 ₫</strong></span>
+        </div>
+      </div>
+
+      <!-- Danh Mục Bạc -->
+      <div class="kpi-card silver-card">
+        <div class="kpi-header">
+          <span class="kpi-title">Tài Sản Bạc (Ancarat, Phú Quý)</span>
+          <span class="kpi-badge badge-silver" id="kpi-silver-roi">+0.00%</span>
+        </div>
+        <div class="kpi-value" id="kpi-silver-value">0 ₫</div>
+        <div class="kpi-sub">
+          <span>Khối lượng: <strong class="highlight" id="kpi-silver-qty">0 lượng</strong></span>
+          <span>Lãi ròng: <strong class="highlight" id="kpi-silver-profit">0 ₫</strong></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Main Dashboard Grid -->
+    <div class="dashboard-grid">
+      
+      <!-- Cột Trái: Bảng Quản Lý Danh Mục Giao Dịch & Bảng Giá Thị Trường -->
+      <div class="main-left">
+        
+        <!-- Bảng Danh Mục Giao Dịch -->
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fas fa-list-ul"></i> Sổ Giao Dịch & Quản Lý Vốn Thực Tế
+            </div>
+            <div class="filter-bar" style="margin-bottom: 0;">
+              <button class="filter-btn active" data-type="all">Tất cả</button>
+              <button class="filter-btn" data-type="gold">👑 Vàng</button>
+              <button class="filter-btn" data-type="silver">✨ Bạc</button>
+              <input type="text" class="search-input" id="search-input" placeholder="🔍 Tìm kiếm GD...">
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ngày Mua</th>
+                  <th>Kim Loại & Thương Hiệu</th>
+                  <th>Số Lượng</th>
+                  <th>Giá Mua</th>
+                  <th>Phí Công</th>
+                  <th>Tổng Vốn</th>
+                  <th>Giá Tiệm Thu Mua</th>
+                  <th>Giá Trị Hiện Tại</th>
+                  <th>Lời / Lỗ (ROI)</th>
+                  <th>Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody id="transactions-tbody">
+                <!-- Javascript renders dynamic rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Bảng Giá Sàn & Thương Hiệu Trực Tuyến -->
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fas fa-chart-line"></i> Bảng Giá Thị Trường Niêm Yết Hôm Nay
+            </div>
+            <span style="font-size: 12px; color: var(--text-muted);">
+              Cập nhật trực tiếp từ hệ thống sàn BTMH, Ancarat, DOJI, BTMC, Phú Quý
+            </span>
+          </div>
+          
+          <div class="market-grid" id="market-prices-grid">
+            <!-- Javascript renders price cards -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Cột Phải: Biểu Đồ, Mục Tiêu Tích Sản & Đồng Bộ Sheets -->
+      <div class="main-right">
+        
+        <!-- Biểu Đồ Cơ Cấu Tài Sản -->
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fas fa-chart-pie"></i> Tỷ Trọng Vàng vs Bạc
+            </div>
+          </div>
+          <div style="height: 220px; position: relative;">
+            <canvas id="distributionChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Biểu Đồ Phân Bổ Thương Hiệu -->
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fas fa-balance-scale"></i> Cơ Cấu Theo Thương Hiệu
+            </div>
+          </div>
+          <div style="height: 220px; position: relative;">
+            <canvas id="brandChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Mục Tiêu Tích Sản & Vùng Giá -->
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fas fa-bullseye"></i> Mục Tiêu Tích Lũy 2026
+            </div>
+          </div>
+          
+          <!-- Mục tiêu Vàng -->
+          <div class="target-box">
+            <div class="target-info" id="target-gold-info">
+              <span>Đang tính toán...</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-fill-gold" id="target-gold-progress" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- Mục tiêu Bạc -->
+          <div class="target-box">
+            <div class="target-info" id="target-silver-info">
+              <span>Đang tính toán...</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-fill-silver" id="target-silver-progress" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div style="margin-top: 14px; font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+            💡 <strong>Mẹo tích sản:</strong> Chiến lược gom định kỳ vàng Gift (1-2 phân/tháng) và Bạc Ancarat/Phú Quý giúp tối ưu hóa giá vốn trung bình (DCA) hiệu quả.
+          </div>
+        </div>
+
+        <!-- Tiện ích Kết nối & Sao lưu dữ liệu -->
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fas fa-sync-alt"></i> Tiện Ích Dữ Liệu
+            </div>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn btn-glass" onclick="openSyncModal()" style="width: 100%; justify-content: center;">
+              <i class="fab fa-google-drive" style="color: #4285f4;"></i> Cấu hình Google Sheets
+            </button>
+            <button class="btn btn-glass" onclick="pullFromGoogleSheets()" style="width: 100%; justify-content: center;">
+              <i class="fas fa-cloud-download-alt" style="color: #0284c7;"></i> Tải dữ liệu từ Google Sheets
+            </button>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-glass btn-sm" onclick="exportJSONBackup()" style="flex: 1; justify-content: center;">
+                <i class="fas fa-download"></i> Sao lưu JSON
+              </button>
+              <button class="btn btn-glass btn-sm" onclick="triggerImportJSON()" style="flex: 1; justify-content: center;">
+                <i class="fas fa-upload"></i> Khôi phục JSON
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Modal Thêm / Chỉnh Sửa Giao Dịch -->
+  <div class="modal-overlay" id="tx-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-title">Thêm Giao Dịch Mua Vàng / Bạc</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="tx-form" onsubmit="saveTransaction(event)">
+        <div class="modal-body">
+          <input type="hidden" id="tx-id">
+
+          <div class="form-grid">
+            
+            <div class="form-group">
+              <label class="form-label">Loại Kim Loại</label>
+              <select class="form-control" id="tx-type">
+                <option value="gold">👑 Vàng (Gold)</option>
+                <option value="silver">✨ Bạc (Silver)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Thương Hiệu</label>
+              <select class="form-control" id="tx-brand">
+                <!-- Javascript dynamic options -->
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Tên Sản Phẩm / Dòng Vàng Bạc</label>
+              <input type="text" class="form-control" id="tx-product" required placeholder="VD: Vàng Gift BTMH, Bạc Ancarat Master Bar...">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Đơn Vị Tính</label>
+              <select class="form-control" id="tx-unit">
+                <!-- Javascript dynamic options -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Số Lượng</label>
+              <input type="number" step="any" min="0.001" class="form-control" id="tx-quantity" required placeholder="VD: 6, 10, 0.5...">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Đơn Giá Mua (VNĐ / Đơn vị)</label>
+              <input type="number" step="1000" min="1000" class="form-control" id="tx-price" required placeholder="VD: 1528000">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tiền Công / Phí Đóng Gói (VNĐ)</label>
+              <input type="number" step="1000" min="0" class="form-control" id="tx-fee" value="0" placeholder="0">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ngày Giờ Mua</label>
+              <input type="date" class="form-control" id="tx-date" required>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Ghi Chú / Nơi Cất Giữ</label>
+              <input type="text" class="form-control" id="tx-note" placeholder="VD: 6 phân vàng Gift BTMH, két sắt nhà...">
+            </div>
+
+          </div>
+
+          <!-- Preview Thành Tiền -->
+          <div class="calc-preview">
+            <span>Tổng vốn dự kiến bỏ ra:</span>
+            <strong id="form-total-preview">0 ₫</strong>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-glass" onclick="closeModal()">Hủy</button>
+          <button type="submit" class="btn btn-gold">
+            <i class="fas fa-save"></i> Lưu Giao Dịch
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Cấu Hình Google Sheets -->
+  <div class="modal-overlay" id="sync-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Kết Nối Google Sheets 2 Chiều</h3>
+        <button class="modal-close" onclick="closeSyncModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Google Apps Script Web App URL</label>
+          <input type="url" class="form-control" id="gsheet-url" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+        
+        <div style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-top: 14px; background: var(--bg-primary); padding: 14px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+          <p><strong><i class="fas fa-info-circle" style="color: #b8860b;"></i> Các bước kết nối nhanh:</strong></p>
+          <ol style="margin-left: 20px; margin-top: 6px;">
+            <li>Mở file Google Sheets của chị Huyền.</li>
+            <li>Vào menu <strong>Tiện ích mở rộng (Extensions) &rarr; Apps Script</strong>.</li>
+            <li>Dán mã từ file <code>Google_Sheets_Sync_Script.js</code> vào và nhấn <strong>Triển khai (Deploy) &rarr; Tùy chọn triển khai mới</strong>.</li>
+            <li>Chọn loại <strong>Web App</strong>, quyền truy cập để <strong>Bất kỳ ai (Anyone)</strong>.</li>
+            <li>Copy URL dán vào ô bên trên và bấm <strong>Lưu cấu hình</strong>.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-glass" onclick="closeSyncModal()">Đóng</button>
+        <button type="button" class="btn btn-gold" onclick="saveGoogleSheetConfig()">
+          <i class="fas fa-check-circle"></i> Lưu Cấu Hình
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Register PWA Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then(reg => {
+          console.log('Service Worker Registered!', reg);
+        }).catch(err => {
+          console.log('Service Worker registration failed: ', err);
+        });
+      });
+    }
+  </script>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>
