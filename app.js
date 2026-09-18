@@ -109,8 +109,8 @@ function toggleTheme() {
   state.theme = state.theme === 'light' ? 'dark' : 'light';
   localStorage.setItem('huyen_theme', state.theme);
   applyTheme(state.theme);
-  renderCharts(); // Cập nhật màu chữ biểu đồ
-  showToast(state.theme === 'light' ? '☀️ Đã chuyển sang giao diện Nền Sáng dễ nhìn!' : '🌙 Đã chuyển sang giao diện Nền Tối Luxury!');
+  renderCharts();
+  showToast(state.theme === 'light' ? '☀️ Đã chuyển sang giao diện Nền Sáng!' : '🌙 Đã chuyển sang giao diện Nền Tối!');
 }
 
 function applyTheme(theme) {
@@ -197,7 +197,6 @@ function updateBrandSelect() {
     brandSelect.appendChild(opt);
   });
 
-  // Gợi ý tên sản phẩm mặc định
   const defaultProd = filteredBrands[0]?.defaultProduct || '';
   const prodInput = document.getElementById('tx-product');
   if (prodInput && !prodInput.value) {
@@ -259,7 +258,6 @@ function getCurrentPriceForTransaction(tx) {
       else multiplier = 1;
     }
   } else {
-    // Bạc (Ancarat / Phú Quý theo lượng)
     if (market.unit === 'lượng') {
       if (tx.unit === 'kg') multiplier = 1000 / 37.5;
       else if (tx.unit === 'gram') multiplier = 1 / 37.5;
@@ -285,7 +283,7 @@ function renderAll() {
   renderCharts();
 }
 
-// 1. Render Thẻ KPI Tổng quan
+// 1. Render Thẻ KPI Tổng quan (LÃI XANH LÁ | LỖ ĐỎ)
 function renderKPICards() {
   let totalCost = 0;
   let totalCurrentValue = 0;
@@ -334,7 +332,7 @@ function renderKPICards() {
   const silverProfit = silverCurrentValue - silverCost;
   const silverRoi = silverCost > 0 ? (silverProfit / silverCost) * 100 : 0;
 
-  // Cập nhật DOM
+  // Cập nhật DOM Tổng
   const totalValEl = document.getElementById('kpi-total-value');
   const totalCostEl = document.getElementById('kpi-total-cost');
   const totalProfitEl = document.getElementById('kpi-total-profit');
@@ -342,12 +340,13 @@ function renderKPICards() {
 
   if (totalValEl) totalValEl.textContent = formatVND(totalCurrentValue);
   if (totalCostEl) totalCostEl.textContent = formatVND(totalCost);
+  
   if (totalProfitEl) {
     totalProfitEl.textContent = (totalProfit >= 0 ? '+' : '') + formatVND(totalProfit);
-    totalProfitEl.className = totalProfit >= 0 ? 'kpi-value text-profit' : 'kpi-value text-loss';
+    totalProfitEl.className = totalProfit >= 0 ? 'highlight text-profit' : 'highlight text-loss';
   }
   if (totalRoiBadge) {
-    totalRoiBadge.textContent = (totalRoi >= 0 ? '+' : '') + formatNumber(totalRoi, 2) + '%';
+    totalRoiBadge.textContent = (totalRoi >= 0 ? '▲ +' : '▼ ') + formatNumber(totalRoi, 2) + '%';
     totalRoiBadge.className = totalRoi >= 0 ? 'kpi-badge badge-success' : 'kpi-badge badge-danger';
   }
 
@@ -359,9 +358,13 @@ function renderKPICards() {
 
   if (goldValEl) goldValEl.textContent = formatVND(goldCurrentValue);
   if (goldQtyEl) goldQtyEl.textContent = `${formatNumber(goldTotalPhan, 1)} phân (${formatNumber(goldTotalPhan / 10, 2)} chỉ)`;
-  if (goldProfitEl) goldProfitEl.textContent = (goldProfit >= 0 ? '+' : '') + formatVND(goldProfit);
+  
+  if (goldProfitEl) {
+    goldProfitEl.textContent = (goldProfit >= 0 ? '+' : '') + formatVND(goldProfit);
+    goldProfitEl.className = goldProfit >= 0 ? 'highlight text-profit' : 'highlight text-loss';
+  }
   if (goldRoiBadge) {
-    goldRoiBadge.textContent = (goldRoi >= 0 ? '+' : '') + formatNumber(goldRoi, 2) + '%';
+    goldRoiBadge.textContent = (goldRoi >= 0 ? '▲ +' : '▼ ') + formatNumber(goldRoi, 2) + '%';
     goldRoiBadge.className = goldRoi >= 0 ? 'kpi-badge badge-success' : 'kpi-badge badge-danger';
   }
 
@@ -373,9 +376,13 @@ function renderKPICards() {
 
   if (silverValEl) silverValEl.textContent = formatVND(silverCurrentValue);
   if (silverQtyEl) silverQtyEl.textContent = `${formatNumber(silverTotalLuong, 1)} lượng (~${formatNumber(silverTotalKg, 3)} kg)`;
-  if (silverProfitEl) silverProfitEl.textContent = (silverProfit >= 0 ? '+' : '') + formatVND(silverProfit);
+  
+  if (silverProfitEl) {
+    silverProfitEl.textContent = (silverProfit >= 0 ? '+' : '') + formatVND(silverProfit);
+    silverProfitEl.className = silverProfit >= 0 ? 'highlight text-profit' : 'highlight text-loss';
+  }
   if (silverRoiBadge) {
-    silverRoiBadge.textContent = (silverRoi >= 0 ? '+' : '') + formatNumber(silverRoi, 2) + '%';
+    silverRoiBadge.textContent = (silverRoi >= 0 ? '▲ +' : '▼ ') + formatNumber(silverRoi, 2) + '%';
     silverRoiBadge.className = silverRoi >= 0 ? 'kpi-badge badge-success' : 'kpi-badge badge-danger';
   }
 }
@@ -403,7 +410,7 @@ function renderLiveTicker() {
   `).join('');
 }
 
-// 3. Render Bảng Giao Dịch Chi Tiết
+// 3. Render Bảng Giao Dịch Chi Tiết (LÃI XANH LÁ | LỖ ĐỎ)
 function renderTransactionsTable() {
   const tbody = document.getElementById('transactions-tbody');
   if (!tbody) return;
@@ -449,6 +456,10 @@ function renderTransactionsTable() {
 
     const unitName = tx.unit === 'phan' ? 'Phân' : (tx.unit === 'chi' ? 'Chỉ' : (tx.unit === 'luong' ? 'Lượng' : (tx.unit === 'kg' ? 'Kg' : tx.unit)));
 
+    const isProfit = profit >= 0;
+    const pillClass = isProfit ? 'profit-pill-green' : 'profit-pill-red';
+    const arrowIcon = isProfit ? 'fa-arrow-up' : 'fa-arrow-down';
+
     return `
       <tr>
         <td><strong>${tx.buyDate}</strong></td>
@@ -466,9 +477,12 @@ function renderTransactionsTable() {
           <div>${formatVND(currPrice.buy)} <span style="font-size: 10px; color: var(--text-dim);">(mua vào)</span></div>
         </td>
         <td><strong>${formatVND(currVal)}</strong></td>
-        <td class="${profit >= 0 ? 'profit-pos' : 'profit-neg'}">
-          ${profit >= 0 ? '+' : ''}${formatVND(profit)}
-          <div style="font-size: 11px;">(${profit >= 0 ? '+' : ''}${formatNumber(roi, 2)}%)</div>
+        <td>
+          <div class="${pillClass}">
+            <i class="fas ${arrowIcon}"></i>
+            <span>${isProfit ? '+' : ''}${formatVND(profit)}</span>
+            <span style="font-size: 11px; opacity: 0.9;">(${isProfit ? '+' : ''}${formatNumber(roi, 2)}%)</span>
+          </div>
         </td>
         <td>
           <div class="action-btns">

@@ -4,7 +4,7 @@
   --bg-primary: #f6f8fb;
   --bg-secondary: #ffffff;
   --bg-card: #ffffff;
-  --bg-card-hover: #fafbfc;
+  --bg-card-hover: #f1f5f9;
   --border-color: rgba(218, 165, 32, 0.35);
   --border-subtle: rgba(0, 0, 0, 0.08);
   
@@ -22,8 +22,11 @@
   
   --profit-green: #059669;
   --profit-bg: rgba(5, 150, 105, 0.12);
+  --profit-border: rgba(5, 150, 105, 0.3);
+  
   --loss-red: #dc2626;
   --loss-bg: rgba(220, 38, 38, 0.12);
+  --loss-border: rgba(220, 38, 38, 0.3);
   
   --text-main: #1e293b;
   --text-muted: #64748b;
@@ -60,9 +63,12 @@ body.dark-mode {
   --silver-gradient: linear-gradient(135deg, #ffffff 0%, #d4d8dd 50%, #8a9ba8 100%);
   
   --profit-green: #10b981;
-  --profit-bg: rgba(16, 185, 129, 0.15);
+  --profit-bg: rgba(16, 185, 129, 0.18);
+  --profit-border: rgba(16, 185, 129, 0.4);
+  
   --loss-red: #ef4444;
-  --loss-bg: rgba(239, 68, 68, 0.15);
+  --loss-bg: rgba(239, 68, 68, 0.18);
+  --loss-border: rgba(239, 68, 68, 0.4);
   
   --text-main: #f0f6fc;
   --text-muted: #8b949e;
@@ -313,16 +319,29 @@ body.dark-mode .badge-silver {
   color: var(--silver-light);
 }
 
+/* LÃI: MÀU XANH LÁ | LỖ: MÀU ĐỎ */
 .badge-success {
-  background: var(--profit-bg);
-  color: var(--profit-green);
-  border: 1px solid rgba(5, 150, 105, 0.25);
+  background: var(--profit-bg) !important;
+  color: var(--profit-green) !important;
+  border: 1px solid var(--profit-border) !important;
+  font-weight: 700;
 }
 
 .badge-danger {
-  background: var(--loss-bg);
-  color: var(--loss-red);
-  border: 1px solid rgba(220, 38, 38, 0.25);
+  background: var(--loss-bg) !important;
+  color: var(--loss-red) !important;
+  border: 1px solid var(--loss-border) !important;
+  font-weight: 700;
+}
+
+.text-profit {
+  color: var(--profit-green) !important;
+  font-weight: 700 !important;
+}
+
+.text-loss {
+  color: var(--loss-red) !important;
+  font-weight: 700 !important;
 }
 
 .kpi-value {
@@ -331,14 +350,6 @@ body.dark-mode .badge-silver {
   color: var(--text-main);
   margin-bottom: 8px;
   letter-spacing: -0.5px;
-}
-
-.kpi-value.text-profit {
-  color: var(--profit-green);
-}
-
-.kpi-value.text-loss {
-  color: var(--loss-red);
 }
 
 .kpi-sub {
@@ -558,14 +569,31 @@ td {
   color: var(--text-main);
 }
 
-td.profit-pos {
+/* HIỂN THỊ LÃI XANH - LỖ ĐỎ NỔI BẬT */
+.profit-pill-green {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--profit-bg);
   color: var(--profit-green);
+  border: 1px solid var(--profit-border);
+  padding: 4px 9px;
+  border-radius: 6px;
   font-weight: 700;
+  font-size: 12px;
 }
 
-td.profit-neg {
+.profit-pill-red {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--loss-bg);
   color: var(--loss-red);
+  border: 1px solid var(--loss-border);
+  padding: 4px 9px;
+  border-radius: 6px;
   font-weight: 700;
+  font-size: 12px;
 }
 
 .brand-tag {
@@ -619,7 +647,7 @@ body.dark-mode .tag-silver {
 .icon-btn.delete-btn:hover {
   color: var(--loss-red);
   background: var(--loss-bg);
-  border-color: rgba(220, 38, 38, 0.3);
+  border-color: var(--loss-border);
 }
 
 /* Market Prices Grid */
