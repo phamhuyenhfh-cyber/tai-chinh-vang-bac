@@ -4,8 +4,6 @@
  * Cập nhật phiên bản mới nhất: Tách 2 khối Bạc & Vàng Nhẫn, tích hợp link web chính thống
  */
 
-const DATA_VERSION = 'v2026_09_18_v4_gift';
-
 // Định nghĩa cấu hình quy đổi và thương hiệu
 const UNITS = {
   GOLD: [
@@ -160,6 +158,8 @@ const HUYEN_REAL_TRANSACTIONS = [
   }
 ];
 
+const DATA_VERSION = 'v2026_09_18_v5_final_gift_perfect';
+
 // Khởi tạo state và xóa cache cũ nếu phiên bản thay đổi
 const cachedVersion = localStorage.getItem('huyen_data_version');
 if (cachedVersion !== DATA_VERSION) {
@@ -169,8 +169,12 @@ if (cachedVersion !== DATA_VERSION) {
 }
 
 let state = {
-  transactions: JSON.parse(localStorage.getItem('huyen_gold_transactions')) || HUYEN_REAL_TRANSACTIONS,
-  marketPrices: JSON.parse(localStorage.getItem('huyen_market_prices')) || OFFICIAL_MARKET_PRICES,
+  transactions: (cachedVersion === DATA_VERSION && localStorage.getItem('huyen_gold_transactions')) 
+    ? JSON.parse(localStorage.getItem('huyen_gold_transactions')) 
+    : JSON.parse(JSON.stringify(HUYEN_REAL_TRANSACTIONS)),
+  marketPrices: (cachedVersion === DATA_VERSION && localStorage.getItem('huyen_market_prices')) 
+    ? JSON.parse(localStorage.getItem('huyen_market_prices')) 
+    : JSON.parse(JSON.stringify(OFFICIAL_MARKET_PRICES)),
   targets: JSON.parse(localStorage.getItem('huyen_targets')) || { goldLuong: 5, silverKg: 3 },
   googleSheetUrl: localStorage.getItem('huyen_gsheet_url') || '',
   filterType: 'all',
@@ -181,6 +185,29 @@ let state = {
 
 let distributionChart = null;
 let brandChart = null;
+
+// Hàm bắt buộc xóa sạch toàn bộ cache và nạp lại chuẩn 100%
+function forceResetAllData() {
+  if (confirm('Chị Huyền có muốn làm mới bộ nhớ đệm và nạp lại chuẩn 100% bảng giá Vàng Gift BTMH và Bạc Ancarat không?')) {
+    localStorage.clear();
+    localStorage.setItem('huyen_data_version', DATA_VERSION);
+    localStorage.setItem('huyen_market_prices', JSON.stringify(OFFICIAL_MARKET_PRICES));
+    localStorage.setItem('huyen_gold_transactions', JSON.stringify(HUYEN_REAL_TRANSACTIONS));
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        for (let reg of registrations) {
+          reg.unregister();
+        }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        for (let name of names) caches.delete(name);
+      });
+    }
+    window.location.reload();
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   applyTheme(state.theme);

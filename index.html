@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260918_v5">
 
   <!-- Chart.js & SheetJS (Excel) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -59,6 +59,9 @@
         </button>
         <button class="btn btn-glass" id="btn-refresh-prices" onclick="refreshMarketPrices()">
           <i class="fas fa-sync-alt"></i> Làm mới giá
+        </button>
+        <button class="btn btn-glass" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);" title="Xóa toàn bộ cache cũ và nạp lại bảng giá chuẩn" onclick="forceResetAllData()">
+          <i class="fas fa-trash-restore"></i> Reset Bảng Giá Chuẩn
         </button>
       </div>
     </header>
@@ -513,6 +516,6 @@
   </script>
 
   <!-- App Script -->
-  <script src="app.js"></script>
+  <script src="app.js?v=20260918_v5"></script>
 </body>
 </html>
