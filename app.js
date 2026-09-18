@@ -24,27 +24,29 @@ const UNITS = {
 
 const BRANDS = [
   { id: 'BTMH', name: 'Bảo Tín Mạnh Hải', type: 'gold', defaultProduct: 'Vàng Gift Kim Gia Bảo / Vàng Nhẫn 999.9' },
-  { id: 'ANCARAT', name: 'Bạc Ancarat', type: 'silver', defaultProduct: 'Bạc Tích Trữ Ancarat 9999 Master Bar' },
   { id: 'BTMC', name: 'Bảo Tín Minh Châu', type: 'gold', defaultProduct: 'Vàng Rồng Thăng Long 999.9' },
   { id: 'DOJI', name: 'DOJI Gold', type: 'gold', defaultProduct: 'Vàng nhẫn Tròn 9999 Hưng Thịnh Vượng' },
-  { id: 'PHU_QUY', name: 'Bạc Phú Quý', type: 'silver', defaultProduct: 'Bạc Thỏi Phú Quý 999.9 (1 Cây / 1 Kg)' },
   { id: 'SJC', name: 'SJC Sài Gòn', type: 'gold', defaultProduct: 'Vàng miếng SJC 99.99' },
   { id: 'PNJ', name: 'PNJ', type: 'gold', defaultProduct: 'Vàng nhẫn Trơn PNJ 999.9' },
+  { id: 'ANCARAT', name: 'Bạc Ancarat', type: 'silver', defaultProduct: 'Bạc Tích Trữ Ancarat 9999 Master Bar' },
+  { id: 'PHU_QUY', name: 'Bạc Phú Quý', type: 'silver', defaultProduct: 'Bạc Thỏi Phú Quý 999.9 (1 Cây / 1 Kg)' },
   { id: 'OTHER', name: 'Thương hiệu khác', type: 'all', defaultProduct: 'Vàng/Bạc Tích Trữ' }
 ];
 
-// Khởi tạo bảng giá sàn tham chiếu thực tế
+// Khởi tạo bảng giá sàn chuẩn xác theo thị trường (Đồng nhất theo Chỉ cho Vàng và theo Lượng cho Bạc)
 const DEFAULT_MARKET_PRICES = {
-  BTMH: { name: 'Vàng BTMH Gift / Nhẫn 999.9', unit: 'phân', buy: 1535000, sell: 1585000, change: '+0.45%' },
-  ANCARAT: { name: 'Bạc Ancarat 9999 Master Bar', unit: 'lượng', buy: 2260000, sell: 2380000, change: '+1.10%' },
-  BTMC: { name: 'Bảo Tín Minh Châu 999.9', unit: 'chỉ', buy: 8660000, sell: 8800000, change: '+0.50%' },
-  DOJI: { name: 'Vàng Nhẫn DOJI 9999', unit: 'chỉ', buy: 8650000, sell: 8790000, change: '+0.40%' },
-  PHU_QUY: { name: 'Bạc Phú Quý 999.9', unit: 'lượng', buy: 2250000, sell: 2370000, change: '+1.20%' },
-  SJC: { name: 'Vàng Miếng SJC', unit: 'lượng', buy: 88500000, sell: 90500000, change: '+0.20%' },
-  PNJ: { name: 'Vàng Nhẫn PNJ 999.9', unit: 'chỉ', buy: 8640000, sell: 8780000, change: '+0.35%' },
-  XAU_USD: { name: 'Vàng Thế Giới (XAU)', unit: 'oz', buy: 2915, sell: 2916, currency: 'USD', change: '+0.65%' },
-  XAG_USD: { name: 'Bạc Thế Giới (XAG)', unit: 'oz', buy: 34.20, sell: 34.25, currency: 'USD', change: '+1.45%' },
-  USD_VND: { name: 'Tỷ giá USD/VND', unit: 'USD', buy: 25420, sell: 25480, currency: 'VND', change: '0.00%' }
+  // --- NHÓM VÀNG (GOLD) ---
+  BTMH: { name: 'Vàng Bảo Tín Mạnh Hải (BTMH)', category: 'gold', unit: 'chỉ', buy: 8645000, sell: 8785000, change: '+0.40%' },
+  BTMC: { name: 'Bảo Tín Minh Châu 999.9', category: 'gold', unit: 'chỉ', buy: 8660000, sell: 8800000, change: '+0.50%' },
+  DOJI: { name: 'Vàng Nhẫn DOJI 9999', category: 'gold', unit: 'chỉ', buy: 8650000, sell: 8790000, change: '+0.45%' },
+  SJC: { name: 'Vàng Miếng SJC', category: 'gold', unit: 'lượng', buy: 88500000, sell: 90500000, change: '+0.20%' },
+  XAU_USD: { name: 'Vàng Thế Giới (XAU)', category: 'gold', unit: 'oz', buy: 2915, sell: 2916, currency: 'USD', change: '+0.65%' },
+
+  // --- NHÓM BẠC (SILVER) ---
+  ANCARAT: { name: 'Bạc Ancarat 9999 Master Bar', category: 'silver', unit: 'lượng', buy: 2260000, sell: 2380000, change: '+1.10%' },
+  PHU_QUY: { name: 'Bạc Phú Quý 999.9', category: 'silver', unit: 'lượng', buy: 2250000, sell: 2370000, change: '+1.20%' },
+  XAG_USD: { name: 'Bạc Thế Giới (XAG)', category: 'silver', unit: 'oz', buy: 34.20, sell: 34.25, currency: 'USD', change: '+1.45%' },
+  USD_VND: { name: 'Tỷ giá USD/VND', category: 'silver', unit: 'USD', buy: 25420, sell: 25480, currency: 'VND', change: '0.00%' }
 };
 
 // Dữ liệu danh mục thực tế của Chị Phạm Huyền
@@ -86,7 +88,7 @@ let state = {
   theme: localStorage.getItem('huyen_theme') || 'light'
 };
 
-// Lưu dữ liệu thực tế vào LocalStorage
+// Lưu dữ liệu vào LocalStorage
 localStorage.setItem('huyen_gold_transactions', JSON.stringify(state.transactions));
 localStorage.setItem('huyen_market_prices', JSON.stringify(state.marketPrices));
 
@@ -241,12 +243,7 @@ function getCurrentPriceForTransaction(tx) {
   let multiplier = 1;
 
   if (tx.type === 'gold') {
-    if (market.unit === 'phân') {
-      if (tx.unit === 'chi') multiplier = 10;
-      else if (tx.unit === 'luong') multiplier = 100;
-      else if (tx.unit === 'gram') multiplier = 1 / 0.375;
-      else multiplier = 1;
-    } else if (market.unit === 'chỉ') {
+    if (market.unit === 'chỉ') {
       if (tx.unit === 'phan') multiplier = 0.1;
       else if (tx.unit === 'luong') multiplier = 10;
       else if (tx.unit === 'gram') multiplier = 1 / 3.75;
@@ -393,10 +390,10 @@ function renderLiveTicker() {
   if (!container) return;
 
   const items = [
-    { label: 'BTMH Gift', val: `${formatNumber(state.marketPrices.BTMH.buy / 1000, 0)}k/phân` },
+    { label: 'BTMH 999.9', val: `${formatNumber(state.marketPrices.BTMH.buy / 1000000, 2)} - ${formatNumber(state.marketPrices.BTMH.sell / 1000000, 2)} Tr/chỉ` },
+    { label: 'BTMC Rồng', val: `${formatNumber(state.marketPrices.BTMC.buy / 1000000, 2)} - ${formatNumber(state.marketPrices.BTMC.sell / 1000000, 2)} Tr/chỉ` },
+    { label: 'DOJI 9999', val: `${formatNumber(state.marketPrices.DOJI.buy / 1000000, 2)} - ${formatNumber(state.marketPrices.DOJI.sell / 1000000, 2)} Tr/chỉ` },
     { label: 'Bạc Ancarat', val: `${formatNumber(state.marketPrices.ANCARAT.buy / 1000000, 2)} Tr/lượng` },
-    { label: 'DOJI 9999', val: `${formatNumber(state.marketPrices.DOJI.buy / 1000000, 2)} Tr/chỉ` },
-    { label: 'BTMC Rồng', val: `${formatNumber(state.marketPrices.BTMC.buy / 1000000, 2)} Tr/chỉ` },
     { label: 'Bạc Phú Quý', val: `${formatNumber(state.marketPrices.PHU_QUY.buy / 1000000, 2)} Tr/lượng` },
     { label: 'XAU/USD', val: `$${formatNumber(state.marketPrices.XAU_USD.buy, 1)}/oz` },
     { label: 'XAG/USD', val: `$${formatNumber(state.marketPrices.XAG_USD.buy, 2)}/oz` }
@@ -499,27 +496,42 @@ function renderTransactionsTable() {
   }).join('');
 }
 
-// 4. Render Bảng Giá Sàn Thị Trường
+// 4. Render Bảng Giá Sàn Thị Trường (TÁCH BIỆT RÕ RÀNG CỤM VÀNG & CỤM BẠC)
 function renderMarketPricesGrid() {
-  const container = document.getElementById('market-prices-grid');
+  const container = document.getElementById('market-prices-container');
   if (!container) return;
 
-  const list = [
+  // Danh sách Vàng (Gold)
+  const goldList = [
     { key: 'BTMH', icon: 'fa-ring', color: '#b8860b' },
-    { key: 'ANCARAT', icon: 'fa-cubes', color: '#475569' },
     { key: 'BTMC', icon: 'fa-crown', color: '#b8860b' },
     { key: 'DOJI', icon: 'fa-coins', color: '#b8860b' },
-    { key: 'PHU_QUY', icon: 'fa-gem', color: '#475569' },
+    { key: 'SJC', icon: 'fa-award', color: '#b8860b' },
     { key: 'XAU_USD', icon: 'fa-globe-americas', color: '#0284c7' }
   ];
 
-  container.innerHTML = list.map(item => {
+  // Danh sách Bạc (Silver)
+  const silverList = [
+    { key: 'ANCARAT', icon: 'fa-cubes', color: '#475569' },
+    { key: 'PHU_QUY', icon: 'fa-gem', color: '#475569' },
+    { key: 'XAG_USD', icon: 'fa-globe-americas', color: '#0284c7' }
+  ];
+
+  const renderCard = (item) => {
     const data = state.marketPrices[item.key];
     if (!data) return '';
     const isUSD = data.currency === 'USD';
     const buyFormatted = isUSD ? `$${formatNumber(data.buy, 2)}` : formatVND(data.buy);
     const sellFormatted = isUSD ? `$${formatNumber(data.sell, 2)}` : formatVND(data.sell);
     const spread = isUSD ? `$${formatNumber(data.sell - data.buy, 2)}` : formatVND(data.sell - data.buy);
+
+    // Gợi ý quy đổi theo Phân cho Vàng
+    let subConvertNote = '';
+    if (data.category === 'gold' && data.unit === 'chỉ') {
+      const buyPerPhan = formatVND(data.buy / 10);
+      const sellPerPhan = formatVND(data.sell / 10);
+      subConvertNote = `<div style="font-size: 11px; color: #b8860b; margin-top: 4px; font-weight: 600;">👉 Quy đổi: ${buyPerPhan} - ${sellPerPhan} / phân</div>`;
+    }
 
     return `
       <div class="price-card">
@@ -539,9 +551,28 @@ function renderMarketPricesGrid() {
           <span class="price-num price-sell">${sellFormatted}</span>
         </div>
         <div class="price-spread">Chênh lệch: ${spread} / ${data.unit}</div>
+        ${subConvertNote}
       </div>
     `;
-  }).join('');
+  };
+
+  container.innerHTML = `
+    <!-- CỤM BẢNG GIÁ VÀNG -->
+    <div class="market-group-title gold">
+      <i class="fas fa-coins"></i> Bảng Giá Vàng Thị Trường (BTMH, BTMC, DOJI, SJC, Thế Giới)
+    </div>
+    <div class="market-grid" style="margin-bottom: 24px;">
+      ${goldList.map(renderCard).join('')}
+    </div>
+
+    <!-- CỤM BẢNG GIÁ BẠC -->
+    <div class="market-group-title silver">
+      <i class="fas fa-gem"></i> Bảng Giá Bạc Thị Trường (Ancarat, Phú Quý, Thế Giới)
+    </div>
+    <div class="market-grid">
+      ${silverList.map(renderCard).join('')}
+    </div>
+  `;
 }
 
 // 5. Render Bộ Đếm Mục Tiêu Tích Sản
@@ -771,7 +802,7 @@ function deleteTransaction(id) {
   }
 }
 
-// 8. Tự động làm mới giá sàn
+// 8. Tự động làm mới giá sàn & Modal Chỉnh Sửa Giá Sàn
 function refreshMarketPrices() {
   const btn = document.getElementById('btn-refresh-prices');
   if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tải...';
@@ -784,10 +815,10 @@ function refreshMarketPrices() {
     state.marketPrices.BTMH.sell += Math.round(deltaGold);
     state.marketPrices.ANCARAT.buy += Math.round(deltaSilver);
     state.marketPrices.ANCARAT.sell += Math.round(deltaSilver);
-    state.marketPrices.DOJI.buy += Math.round(deltaGold * 10);
-    state.marketPrices.DOJI.sell += Math.round(deltaGold * 10);
-    state.marketPrices.BTMC.buy += Math.round(deltaGold * 10);
-    state.marketPrices.BTMC.sell += Math.round(deltaGold * 10);
+    state.marketPrices.DOJI.buy += Math.round(deltaGold);
+    state.marketPrices.DOJI.sell += Math.round(deltaGold);
+    state.marketPrices.BTMC.buy += Math.round(deltaGold);
+    state.marketPrices.BTMC.sell += Math.round(deltaGold);
     state.marketPrices.PHU_QUY.buy += Math.round(deltaSilver);
     state.marketPrices.PHU_QUY.sell += Math.round(deltaSilver);
 
@@ -795,7 +826,7 @@ function refreshMarketPrices() {
     renderAll();
 
     if (btn) btn.innerHTML = '<i class="fas fa-sync-alt"></i> Làm mới giá sàn';
-    showToast('📈 Bảng giá sàn BTMH, Ancarat, DOJI, BTMC đã được cập nhật!');
+    showToast('📈 Bảng giá sàn BTMH, BTMC, DOJI, Ancarat, Phú Quý đã được làm mới!');
   }, 500);
 }
 
@@ -803,6 +834,55 @@ function initAutoRefresh() {
   setInterval(() => {
     refreshMarketPrices();
   }, 5 * 60 * 1000);
+}
+
+// Modal Chỉnh Sửa Trực Tiếp Giá Sàn
+function openPriceEditModal() {
+  const form = document.getElementById('price-edit-form');
+  if (!form) return;
+
+  const keys = ['BTMH', 'BTMC', 'DOJI', 'SJC', 'ANCARAT', 'PHU_QUY'];
+  keys.forEach(k => {
+    const p = state.marketPrices[k];
+    if (p) {
+      const buyEl = document.getElementById(`price-buy-${k.toLowerCase()}`);
+      const sellEl = document.getElementById(`price-sell-${k.toLowerCase()}`);
+      if (buyEl) buyEl.value = p.buy;
+      if (sellEl) sellEl.value = p.sell;
+    }
+  });
+
+  document.getElementById('price-modal').classList.add('active');
+}
+
+function closePriceEditModal() {
+  document.getElementById('price-modal').classList.remove('active');
+}
+
+function saveCustomMarketPrices(e) {
+  e.preventDefault();
+  const keys = ['BTMH', 'BTMC', 'DOJI', 'SJC', 'ANCARAT', 'PHU_QUY'];
+  keys.forEach(k => {
+    const buyEl = document.getElementById(`price-buy-${k.toLowerCase()}`);
+    const sellEl = document.getElementById(`price-sell-${k.toLowerCase()}`);
+    if (buyEl && sellEl) {
+      const buyVal = parseFloat(buyEl.value);
+      const sellVal = parseFloat(sellEl.value);
+      if (buyVal > 0 && sellVal > 0 && state.marketPrices[k]) {
+        state.marketPrices[k].buy = buyVal;
+        state.marketPrices[k].sell = sellVal;
+      }
+    }
+  });
+
+  saveState();
+  closePriceEditModal();
+  renderAll();
+  showToast('💾 Đã cập nhật bảng giá sàn theo thời điểm công ty thành công!');
+
+  if (state.googleSheetUrl) {
+    syncToGoogleSheets(false);
+  }
 }
 
 // 9. Đồng bộ Google Sheets

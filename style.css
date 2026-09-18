@@ -650,6 +650,41 @@ body.dark-mode .tag-silver {
   border-color: var(--loss-border);
 }
 
+/* PHÂN NHÓM GIÁ VÀNG VÀ BẠC RIÊNG BIỆT */
+.market-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 18px 0 12px 0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid;
+}
+
+.market-group-title:first-child {
+  margin-top: 0;
+}
+
+.market-group-title.gold {
+  color: #b8860b;
+  border-color: rgba(218, 165, 32, 0.4);
+}
+body.dark-mode .market-group-title.gold {
+  color: var(--gold-light);
+}
+
+.market-group-title.silver {
+  color: #475569;
+  border-color: rgba(100, 116, 139, 0.3);
+  margin-top: 24px;
+}
+body.dark-mode .market-group-title.silver {
+  color: var(--silver-light);
+}
+
 /* Market Prices Grid */
 .market-grid {
   display: grid;
@@ -794,6 +829,10 @@ body.dark-mode .progress-bar-bg {
   box-shadow: var(--shadow-lg);
   transform: translateY(20px);
   transition: var(--transition);
+}
+
+.modal-box-large {
+  max-width: 680px;
 }
 
 .modal-overlay.active .modal-box {

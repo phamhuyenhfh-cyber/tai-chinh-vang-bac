@@ -54,6 +54,9 @@
         <button class="btn btn-glass" onclick="exportToExcel()">
           <i class="fas fa-file-excel" style="color: #10b981;"></i> Xuất Excel
         </button>
+        <button class="btn btn-glass" onclick="openPriceEditModal()">
+          <i class="fas fa-sliders-h" style="color: #b8860b;"></i> Sửa Giá Sàn
+        </button>
         <button class="btn btn-glass" id="btn-refresh-prices" onclick="refreshMarketPrices()">
           <i class="fas fa-sync-alt"></i> Làm mới giá sàn
         </button>
@@ -90,7 +93,7 @@
       <!-- Danh Mục Vàng -->
       <div class="kpi-card gold-card">
         <div class="kpi-header">
-          <span class="kpi-title">Tài Sản Vàng (BTMH Gift, DOJI, BTMC)</span>
+          <span class="kpi-title">Tài Sản Vàng (BTMH, DOJI, BTMC)</span>
           <span class="kpi-badge badge-gold" id="kpi-gold-roi">+0.00%</span>
         </div>
         <div class="kpi-value" id="kpi-gold-value">0 ₫</div>
@@ -158,19 +161,25 @@
           </div>
         </div>
 
-        <!-- Bảng Giá Sàn & Thương Hiệu Trực Tuyến -->
+        <!-- Bảng Giá Sàn & Thương Hiệu Trực Tuyến (Đã Tách Nhóm Vàng & Bạc) -->
         <div class="glass-card">
           <div class="card-header">
             <div class="card-title">
               <i class="fas fa-chart-line"></i> Bảng Giá Thị Trường Niêm Yết Hôm Nay
             </div>
-            <span style="font-size: 12px; color: var(--text-muted);">
-              Cập nhật trực tiếp từ hệ thống sàn BTMH, Ancarat, DOJI, BTMC, Phú Quý
-            </span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="btn btn-glass btn-sm" onclick="openPriceEditModal()">
+                <i class="fas fa-edit"></i> Chỉnh sửa giá sàn
+              </button>
+              <span style="font-size: 12px; color: var(--text-muted);">
+                Tự động đồng bộ theo thời điểm công ty
+              </span>
+            </div>
           </div>
           
-          <div class="market-grid" id="market-prices-grid">
-            <!-- Javascript renders price cards -->
+          <!-- Container chứa 2 cụm Vàng & Bạc riêng biệt -->
+          <div id="market-prices-container">
+            <!-- Javascript renders separate Gold and Silver grids -->
           </div>
         </div>
 
@@ -232,7 +241,7 @@
           </div>
 
           <div style="margin-top: 14px; font-size: 12px; color: var(--text-muted); line-height: 1.5;">
-            💡 <strong>Mẹo tích sản:</strong> Chiến lược gom định kỳ vàng Gift (1-2 phân/tháng) và Bạc Ancarat/Phú Quý giúp tối ưu hóa giá vốn trung bình (DCA) hiệu quả.
+            💡 <strong>Mẹo tích sản:</strong> Giá vàng nhẫn và vàng Gift BTMH được niêm yết theo chuẩn thị trường, hỗ trợ tính toán lãi/lỗ theo giá tiệm thu mua vào thực tế.
           </div>
         </div>
 
@@ -346,6 +355,82 @@
           <button type="button" class="btn btn-glass" onclick="closeModal()">Hủy</button>
           <button type="submit" class="btn btn-gold">
             <i class="fas fa-save"></i> Lưu Giao Dịch
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Chỉnh Sửa Giá Sàn Trực Tiếp (Tiện ích linh hoạt) -->
+  <div class="modal-overlay" id="price-modal">
+    <div class="modal-box modal-box-large">
+      <div class="modal-header">
+        <h3><i class="fas fa-sliders-h" style="color: #b8860b;"></i> Chỉnh Sửa Bảng Giá Sàn Thị Trường</h3>
+        <button class="modal-close" onclick="closePriceEditModal()">&times;</button>
+      </div>
+      <form id="price-edit-form" onsubmit="saveCustomMarketPrices(event)">
+        <div class="modal-body">
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            Chị có thể cập nhật nhanh giá Mua vào / Bán ra theo đúng thời điểm niêm yết trên website của từng công ty:
+          </p>
+
+          <div style="font-weight: 700; color: #b8860b; margin-bottom: 8px; font-size: 13px; text-transform: uppercase;">
+            👑 Bảng Giá Vàng (VNĐ / Chỉ)
+          </div>
+          <div class="form-grid" style="margin-bottom: 16px;">
+            <div class="form-group">
+              <label class="form-label">BTMH Mua Vào (VNĐ/chỉ)</label>
+              <input type="number" class="form-control" id="price-buy-btmh" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">BTMH Bán Ra (VNĐ/chỉ)</label>
+              <input type="number" class="form-control" id="price-sell-btmh" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">BTMC Mua Vào (VNĐ/chỉ)</label>
+              <input type="number" class="form-control" id="price-buy-btmc" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">BTMC Bán Ra (VNĐ/chỉ)</label>
+              <input type="number" class="form-control" id="price-sell-btmc" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">DOJI Mua Vào (VNĐ/chỉ)</label>
+              <input type="number" class="form-control" id="price-buy-doji" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">DOJI Bán Ra (VNĐ/chỉ)</label>
+              <input type="number" class="form-control" id="price-sell-doji" required>
+            </div>
+          </div>
+
+          <div style="font-weight: 700; color: #475569; margin-bottom: 8px; font-size: 13px; text-transform: uppercase;">
+            ✨ Bảng Giá Bạc (VNĐ / Lượng)
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Bạc Ancarat Mua Vào (VNĐ/lượng)</label>
+              <input type="number" class="form-control" id="price-buy-ancarat" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bạc Ancarat Bán Ra (VNĐ/lượng)</label>
+              <input type="number" class="form-control" id="price-sell-ancarat" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bạc Phú Quý Mua Vào (VNĐ/lượng)</label>
+              <input type="number" class="form-control" id="price-buy-phu_quy" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bạc Phú Quý Bán Ra (VNĐ/lượng)</label>
+              <input type="number" class="form-control" id="price-sell-phu_quy" required>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-glass" onclick="closePriceEditModal()">Hủy</button>
+          <button type="submit" class="btn btn-gold">
+            <i class="fas fa-check-circle"></i> Lưu Bảng Giá Mới
           </button>
         </div>
       </form>

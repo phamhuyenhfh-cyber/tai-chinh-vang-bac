@@ -1,12 +1,12 @@
 /**
  * =========================================================================
- * GOOGLE APPS SCRIPT ĐỒNG BỘ 2 CHIỀU CHO WEB APP QUẢN LÝ VÀNG BẠC
+ * GOOGLE APPS SCRIPT ĐỒNG BỘ 2 CHIỀU & TỰ ĐỘNG CẬP NHẬT GIÁ SÀN
  * Dành riêng cho Chị Phạm Huyền
  * =========================================================================
  */
 
 function doGet(e) {
-  var action = e.parameter.action;
+  var action = e.parameter ? e.parameter.action : '';
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
   if (action === 'GET_TRANSACTIONS') {
@@ -22,9 +22,7 @@ function doGet(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
     
-    var headers = data[0];
     var transactions = [];
-    
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
       if (!row[0]) continue;
@@ -69,7 +67,6 @@ function doPost(e) {
         'Số Lượng', 'Đơn Vị', 'Đơn Giá Mua (VNĐ)', 'Phí Công (VNĐ)', 'Tổng Vốn (VNĐ)', 'Ghi Chú', 'Cập Nhật Lúc'
       ], '#b8860b');
       
-      // Xóa dữ liệu cũ trừ tiêu đề
       if (sheetTx.getLastRow() > 1) {
         sheetTx.getRange(2, 1, sheetTx.getLastRow() - 1, 12).clearContent();
       }
@@ -99,11 +96,11 @@ function doPost(e) {
       
       // 2. Cập nhật Sheet Bảng Giá Sàn
       var sheetPrices = getOrCreateSheet(ss, 'BangGiaSan', [
-        'Mã Sàn', 'Tên Sản Phẩm Niêm Yết', 'Đơn Vị', 'Giá Tiệm Thu Mua', 'Giá Tiệm Bán Ra', 'Biến Động', 'Thời Gian Cập Nhật'
+        'Mã Sàn', 'Tên Sản Phẩm Niêm Yết', 'Nhóm', 'Đơn Vị', 'Giá Tiệm Mua Vào (VNĐ)', 'Giá Tiệm Bán Ra (VNĐ)', 'Biến Động', 'Thời Gian Cập Nhật'
       ], '#161b22');
       
       if (sheetPrices.getLastRow() > 1) {
-        sheetPrices.getRange(2, 1, sheetPrices.getLastRow() - 1, 7).clearContent();
+        sheetPrices.getRange(2, 1, sheetPrices.getLastRow() - 1, 8).clearContent();
       }
       
       var priceKeys = Object.keys(marketPrices);
@@ -113,6 +110,7 @@ function doPost(e) {
           return [
             k,
             p.name,
+            p.category === 'gold' ? 'Vàng' : 'Bạc',
             p.unit,
             p.buy,
             p.sell,
@@ -120,8 +118,8 @@ function doPost(e) {
             new Date()
           ];
         });
-        sheetPrices.getRange(2, 1, rowsPrice.length, 7).setValues(rowsPrice);
-        sheetPrices.getRange(2, 4, rowsPrice.length, 2).setNumberFormat('#,##0');
+        sheetPrices.getRange(2, 1, rowsPrice.length, 8).setValues(rowsPrice);
+        sheetPrices.getRange(2, 5, rowsPrice.length, 2).setNumberFormat('#,##0');
       }
       
       return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'Đã đồng bộ ' + transactions.length + ' giao dịch!' }))
