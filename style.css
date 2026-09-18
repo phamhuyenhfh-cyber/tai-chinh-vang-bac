@@ -1,6 +1,5 @@
 /* Theme Variables */
 :root {
-  /* Default Light Theme (Nền sáng sang trọng, dễ nhìn, chuẩn Apple Luxury) */
   --bg-primary: #f6f8fb;
   --bg-secondary: #ffffff;
   --bg-card: #ffffff;
@@ -41,7 +40,6 @@
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dark Mode Theme */
 body.dark-mode {
   --bg-primary: #0d1117;
   --bg-secondary: #161b22;
@@ -73,10 +71,6 @@ body.dark-mode {
   --text-main: #f0f6fc;
   --text-muted: #8b949e;
   --text-dim: #6e7681;
-  
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -98,7 +92,6 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Container */
 .container {
   max-width: 1400px;
   margin: 0 auto;
@@ -235,6 +228,34 @@ body.dark-mode .btn-silver {
   font-size: 12px;
 }
 
+/* Session Picker (Sáng / Chiều) */
+.session-switch {
+  display: inline-flex;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 3px;
+  gap: 4px;
+}
+
+.session-btn {
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.session-btn.active {
+  background: var(--gold-gradient);
+  color: #1a202c;
+  box-shadow: 0 2px 8px var(--gold-glow);
+}
+
 /* KPI Summary Cards */
 .kpi-grid {
   display: grid;
@@ -273,12 +294,6 @@ body.dark-mode .btn-silver {
   background: linear-gradient(90deg, #d49a17, #3b82f6);
 }
 
-.kpi-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--border-color);
-}
-
 .kpi-header {
   display: flex;
   justify-content: space-between;
@@ -306,20 +321,13 @@ body.dark-mode .btn-silver {
   color: #b8860b;
   border: 1px solid rgba(218, 165, 32, 0.3);
 }
-body.dark-mode .badge-gold {
-  color: var(--gold-light);
-}
 
 .badge-silver {
   background: rgba(100, 116, 139, 0.12);
   color: #475569;
   border: 1px solid rgba(100, 116, 139, 0.25);
 }
-body.dark-mode .badge-silver {
-  color: var(--silver-light);
-}
 
-/* LÃI: MÀU XANH LÁ | LỖ: MÀU ĐỎ */
 .badge-success {
   background: var(--profit-bg) !important;
   color: var(--profit-green) !important;
@@ -392,10 +400,6 @@ body.dark-mode .badge-silver {
   white-space: nowrap;
 }
 
-body.dark-mode .live-bar-title {
-  color: var(--gold-light);
-}
-
 .pulse-dot {
   width: 9px;
   height: 9px;
@@ -459,6 +463,14 @@ body.dark-mode .live-bar-title {
   margin-bottom: 24px;
 }
 
+.glass-card-gold {
+  border-top: 3px solid #d49a17;
+}
+
+.glass-card-silver {
+  border-top: 3px solid #64748b;
+}
+
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -479,10 +491,6 @@ body.dark-mode .live-bar-title {
 
 .card-title i {
   color: #b8860b;
-}
-
-body.dark-mode .card-title i {
-  color: var(--gold-light);
 }
 
 /* Filter Controls */
@@ -521,9 +529,6 @@ body.dark-mode .card-title i {
   font-size: 13px;
   outline: none;
   width: 180px;
-}
-.search-input:focus {
-  border-color: var(--gold-primary);
 }
 
 /* Modern Data Table */
@@ -569,7 +574,6 @@ td {
   color: var(--text-main);
 }
 
-/* HIỂN THỊ LÃI XANH - LỖ ĐỎ NỔI BẬT */
 .profit-pill-green {
   display: inline-flex;
   align-items: center;
@@ -611,17 +615,11 @@ td {
   color: #996515;
   border: 1px solid rgba(218, 165, 32, 0.35);
 }
-body.dark-mode .tag-gold {
-  color: var(--gold-light);
-}
 
 .tag-silver {
   background: rgba(100, 116, 139, 0.12);
   color: #334155;
   border: 1px solid rgba(100, 116, 139, 0.3);
-}
-body.dark-mode .tag-silver {
-  color: var(--silver-light);
 }
 
 .action-btns {
@@ -650,41 +648,6 @@ body.dark-mode .tag-silver {
   border-color: var(--loss-border);
 }
 
-/* PHÂN NHÓM GIÁ VÀNG VÀ BẠC RIÊNG BIỆT */
-.market-group-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 18px 0 12px 0;
-  padding-bottom: 6px;
-  border-bottom: 2px solid;
-}
-
-.market-group-title:first-child {
-  margin-top: 0;
-}
-
-.market-group-title.gold {
-  color: #b8860b;
-  border-color: rgba(218, 165, 32, 0.4);
-}
-body.dark-mode .market-group-title.gold {
-  color: var(--gold-light);
-}
-
-.market-group-title.silver {
-  color: #475569;
-  border-color: rgba(100, 116, 139, 0.3);
-  margin-top: 24px;
-}
-body.dark-mode .market-group-title.silver {
-  color: var(--silver-light);
-}
-
 /* Market Prices Grid */
 .market-grid {
   display: grid;
@@ -698,11 +661,13 @@ body.dark-mode .market-group-title.silver {
   border-radius: var(--radius-md);
   padding: 14px 16px;
   transition: var(--transition);
+  position: relative;
 }
 
 .price-card:hover {
   border-color: var(--border-color);
   box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
 }
 
 .price-card-head {
@@ -716,6 +681,19 @@ body.dark-mode .market-group-title.silver {
   font-size: 14px;
   font-weight: 700;
   color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.official-link {
+  font-size: 11px;
+  color: #0284c7;
+  text-decoration: none;
+  margin-left: 4px;
+}
+.official-link:hover {
+  text-decoration: underline;
 }
 
 .price-row {
@@ -740,9 +718,6 @@ body.dark-mode .market-group-title.silver {
 .price-sell {
   color: #b8860b;
 }
-body.dark-mode .price-sell {
-  color: var(--gold-light);
-}
 
 .price-spread {
   font-size: 11px;
@@ -750,6 +725,14 @@ body.dark-mode .price-sell {
   text-align: right;
   padding-top: 4px;
   border-top: 1px dashed var(--border-subtle);
+}
+
+.session-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-muted);
 }
 
 /* Target & Accumulation Tracker */
@@ -775,9 +758,6 @@ body.dark-mode .price-sell {
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-}
-body.dark-mode .progress-bar-bg {
-  background: rgba(255, 255, 255, 0.08);
 }
 
 .progress-fill-gold {
@@ -852,9 +832,6 @@ body.dark-mode .progress-bar-bg {
   font-weight: 700;
   color: #b8860b;
 }
-body.dark-mode .modal-header h3 {
-  color: var(--gold-light);
-}
 
 .modal-close {
   background: none;
@@ -864,15 +841,11 @@ body.dark-mode .modal-header h3 {
   cursor: pointer;
   transition: var(--transition);
 }
-.modal-close:hover {
-  color: var(--text-main);
-}
 
 .modal-body {
   padding: 24px;
 }
 
-/* Form Styles */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -919,11 +892,6 @@ body.dark-mode .modal-header h3 {
   box-shadow: 0 0 0 3px var(--gold-glow);
 }
 
-select.form-control option {
-  background: var(--bg-card);
-  color: var(--text-main);
-}
-
 .calc-preview {
   background: rgba(218, 165, 32, 0.08);
   border: 1px dashed var(--border-color);
@@ -945,9 +913,6 @@ select.form-control option {
   font-size: 18px;
   color: #b8860b;
 }
-body.dark-mode .calc-preview strong {
-  color: var(--gold-light);
-}
 
 .modal-footer {
   padding: 16px 24px;
@@ -957,7 +922,7 @@ body.dark-mode .calc-preview strong {
   gap: 12px;
 }
 
-/* Notification Toast */
+/* Toast */
 .toast-container {
   position: fixed;
   bottom: 24px;
@@ -985,16 +950,4 @@ body.dark-mode .calc-preview strong {
 @keyframes slideIn {
   from { transform: translateX(100%); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
-}
-
-/* Responsive utilities */
-@media (max-width: 768px) {
-  .header-actions {
-    width: 100%;
-    justify-content: space-between;
-  }
-  .btn {
-    flex: 1;
-    justify-content: center;
-  }
 }
