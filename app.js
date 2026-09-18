@@ -27,7 +27,8 @@ const BRANDS = [
   { id: 'PHU_QUY', name: 'Bạc Phú Quý', type: 'silver', defaultProduct: 'Bạc Miếng / Thỏi Phú Quý 999.9', url: 'https://giabac.phuquygroup.vn/' },
   { id: 'ANCARAT', name: 'Bạc Ancarat', type: 'silver', defaultProduct: 'Bạc Tích Trữ Ancarat 9999 Master Bar', url: 'https://giabac.ancarat.com/' },
   { id: 'DOJI', name: 'Vàng Nhẫn DOJI', type: 'gold', defaultProduct: 'Vàng Nhẫn Tròn 9999 Hưng Thịnh Vượng', url: 'https://banggia.doji.vn/gold-price' },
-  { id: 'BTMH', name: 'Vàng Gift BTMH', type: 'gold', defaultProduct: 'Thẻ Vàng Gift Bảo Tín Mạnh Hải', url: 'https://baotinmanhhai.vn/' },
+  { id: 'BTMH_RING', name: 'Vàng Nhẫn BTMH (Kim Gia Bảo)', type: 'gold', defaultProduct: 'Vàng Nhẫn Ép Vỉ Kim Gia Bảo 999.9', url: 'https://baotinmanhhai.vn/' },
+  { id: 'BTMH_GIFT', name: 'Vàng Gift BTMH (Thẻ Quà Tặng)', type: 'gold', defaultProduct: 'Thẻ Vàng Gift Bảo Tín Mạnh Hải', url: 'https://baotinmanhhai.vn/' },
   { id: 'BTMC', name: 'Vàng Nhẫn BTMC', type: 'gold', defaultProduct: 'Vàng Rồng Thăng Long 999.9', url: 'https://btmc.vn/' },
   { id: 'PHU_TAI', name: 'Vàng Nhẫn Phú Tài', type: 'gold', defaultProduct: 'Vàng Nhẫn Trơn Phú Tài 999.9', url: 'https://vangphutai.vn/' },
   { id: 'OTHER', name: 'Thương hiệu khác', type: 'all', defaultProduct: 'Vàng/Bạc Tích Trữ' }
@@ -71,7 +72,7 @@ const OFFICIAL_MARKET_PRICES = {
     change: '+1.45%'
   },
 
-  // KHỐI 2: VÀNG NHẪN & VÀNG GIFT (DOJI, BTMH, BTMC, PHÚ TÀI, THẾ GIỚI)
+  // KHỐI 2: VÀNG NHẪN & VÀNG GIFT (DOJI, BTMH NHẪN, BTMH GIFT, BTMC, PHÚ TÀI, THẾ GIỚI)
   DOJI: {
     name: 'Vàng Nhẫn DOJI 9999 (Hưng Thịnh Vượng)',
     category: 'gold',
@@ -82,6 +83,28 @@ const OFFICIAL_MARKET_PRICES = {
     buy: 14360000,
     sell: 14650000,
     change: '+1.25%'
+  },
+  BTMH_RING: {
+    name: 'Vàng Nhẫn BTMH 999.9 (Kim Gia Bảo)',
+    category: 'gold',
+    url: 'https://baotinmanhhai.vn/',
+    unit: 'chỉ',
+    morning: { buy: 14300000, sell: 14700000 },
+    evening: { buy: 14410000, sell: 14810000 },
+    buy: 14410000,
+    sell: 14810000,
+    change: '+1.30%'
+  },
+  BTMH_GIFT: {
+    name: 'Vàng Gift BTMH (0.1 - 1 Chỉ)',
+    category: 'gold',
+    url: 'https://baotinmanhhai.vn/',
+    unit: 'phân',
+    morning: { buy: 1440000, sell: 1520000 },
+    evening: { buy: 1450000, sell: 1528000 },
+    buy: 1450000,
+    sell: 1528000,
+    change: '+1.30%'
   },
   BTMH: {
     name: 'Vàng Gift BTMH (0.1 - 1 Chỉ)',
@@ -135,7 +158,7 @@ const HUYEN_REAL_TRANSACTIONS = [
   {
     id: 'tx-huyen-btmh',
     type: 'gold',
-    brand: 'BTMH',
+    brand: 'BTMH_GIFT',
     productName: 'Vàng Gift Bảo Tín Mạnh Hải (6 phân)',
     unit: 'phan',
     quantity: 6,
@@ -158,7 +181,7 @@ const HUYEN_REAL_TRANSACTIONS = [
   }
 ];
 
-const DATA_VERSION = 'v2026_09_18_v5_final_gift_perfect';
+const DATA_VERSION = 'v2026_09_18_v6_two_btmh_types';
 
 // Khởi tạo state và xóa cache cũ nếu phiên bản thay đổi
 const cachedVersion = localStorage.getItem('huyen_data_version');
@@ -358,7 +381,9 @@ function calculateFormPreview() {
 }
 
 function getCurrentPriceForTransaction(tx) {
-  const market = state.marketPrices[tx.brand] || (tx.type === 'gold' ? state.marketPrices.BTMH : state.marketPrices.ANCARAT);
+  let brandKey = tx.brand;
+  if (brandKey === 'BTMH') brandKey = 'BTMH_GIFT';
+  const market = state.marketPrices[brandKey] || (tx.type === 'gold' ? (state.marketPrices.BTMH_GIFT || state.marketPrices.BTMH_RING || state.marketPrices.DOJI) : state.marketPrices.ANCARAT);
   if (!market) return { buy: tx.buyPrice, sell: tx.buyPrice };
 
   let multiplier = 1;
@@ -675,7 +700,8 @@ function renderGoldPricesGrid() {
 
   const goldList = [
     { key: 'DOJI', icon: 'fa-coins', color: '#b8860b' },
-    { key: 'BTMH', icon: 'fa-ring', color: '#b8860b' },
+    { key: 'BTMH_RING', icon: 'fa-ring', color: '#b8860b' },
+    { key: 'BTMH_GIFT', icon: 'fa-gift', color: '#d97706' },
     { key: 'BTMC', icon: 'fa-crown', color: '#b8860b' },
     { key: 'PHU_TAI', icon: 'fa-award', color: '#b8860b' },
     { key: 'XAU_USD', icon: 'fa-globe-americas', color: '#0284c7' }
@@ -978,7 +1004,7 @@ function initAutoRefresh() {
 }
 
 function openPriceEditModal() {
-  const keys = ['PHU_QUY', 'ANCARAT', 'DOJI', 'BTMH', 'BTMC', 'PHU_TAI'];
+  const keys = ['PHU_QUY', 'ANCARAT', 'DOJI', 'BTMH_RING', 'BTMH_GIFT', 'BTMC', 'PHU_TAI'];
   keys.forEach(k => {
     const p = state.marketPrices[k];
     if (p) {
@@ -998,7 +1024,7 @@ function closePriceEditModal() {
 
 function saveCustomMarketPrices(e) {
   e.preventDefault();
-  const keys = ['PHU_QUY', 'ANCARAT', 'DOJI', 'BTMH', 'BTMC', 'PHU_TAI'];
+  const keys = ['PHU_QUY', 'ANCARAT', 'DOJI', 'BTMH_RING', 'BTMH_GIFT', 'BTMC', 'PHU_TAI'];
   keys.forEach(k => {
     const buyEl = document.getElementById(`price-buy-${k.toLowerCase()}`);
     const sellEl = document.getElementById(`price-sell-${k.toLowerCase()}`);
