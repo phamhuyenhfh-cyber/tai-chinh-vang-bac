@@ -4,7 +4,7 @@
  * Cập nhật phiên bản mới nhất: Tách 2 khối Bạc & Vàng Nhẫn, tích hợp link web chính thống
  */
 
-const DATA_VERSION = 'v2026_09_18_v3';
+const DATA_VERSION = 'v2026_09_18_v4_gift';
 
 // Định nghĩa cấu hình quy đổi và thương hiệu
 const UNITS = {
@@ -29,7 +29,7 @@ const BRANDS = [
   { id: 'PHU_QUY', name: 'Bạc Phú Quý', type: 'silver', defaultProduct: 'Bạc Miếng / Thỏi Phú Quý 999.9', url: 'https://giabac.phuquygroup.vn/' },
   { id: 'ANCARAT', name: 'Bạc Ancarat', type: 'silver', defaultProduct: 'Bạc Tích Trữ Ancarat 9999 Master Bar', url: 'https://giabac.ancarat.com/' },
   { id: 'DOJI', name: 'Vàng Nhẫn DOJI', type: 'gold', defaultProduct: 'Vàng Nhẫn Tròn 9999 Hưng Thịnh Vượng', url: 'https://banggia.doji.vn/gold-price' },
-  { id: 'BTMH', name: 'Vàng Nhẫn BTMH', type: 'gold', defaultProduct: 'Vàng Nhẫn Ép Vỉ Kim Gia Bảo 999.9', url: 'https://baotinmanhhai.vn/' },
+  { id: 'BTMH', name: 'Vàng Gift BTMH', type: 'gold', defaultProduct: 'Thẻ Vàng Gift Bảo Tín Mạnh Hải', url: 'https://baotinmanhhai.vn/' },
   { id: 'BTMC', name: 'Vàng Nhẫn BTMC', type: 'gold', defaultProduct: 'Vàng Rồng Thăng Long 999.9', url: 'https://btmc.vn/' },
   { id: 'PHU_TAI', name: 'Vàng Nhẫn Phú Tài', type: 'gold', defaultProduct: 'Vàng Nhẫn Trơn Phú Tài 999.9', url: 'https://vangphutai.vn/' },
   { id: 'OTHER', name: 'Thương hiệu khác', type: 'all', defaultProduct: 'Vàng/Bạc Tích Trữ' }
@@ -73,7 +73,7 @@ const OFFICIAL_MARKET_PRICES = {
     change: '+1.45%'
   },
 
-  // KHỐI 2: VÀNG NHẪN (DOJI, BTMH, BTMC, PHÚ TÀI, THẾ GIỚI)
+  // KHỐI 2: VÀNG NHẪN & VÀNG GIFT (DOJI, BTMH, BTMC, PHÚ TÀI, THẾ GIỚI)
   DOJI: {
     name: 'Vàng Nhẫn DOJI 9999 (Hưng Thịnh Vượng)',
     category: 'gold',
@@ -86,14 +86,14 @@ const OFFICIAL_MARKET_PRICES = {
     change: '+1.25%'
   },
   BTMH: {
-    name: 'Vàng Nhẫn BTMH 999.9 (Kim Gia Bảo)',
+    name: 'Vàng Gift BTMH (0.1 - 1 Chỉ)',
     category: 'gold',
     url: 'https://baotinmanhhai.vn/',
-    unit: 'chỉ',
-    morning: { buy: 14300000, sell: 14700000 },
-    evening: { buy: 14410000, sell: 14810000 },
-    buy: 14410000,
-    sell: 14810000,
+    unit: 'phân',
+    morning: { buy: 1440000, sell: 1520000 },
+    evening: { buy: 1450000, sell: 1528000 },
+    buy: 1450000,
+    sell: 1528000,
     change: '+1.30%'
   },
   BTMC: {
@@ -337,7 +337,13 @@ function getCurrentPriceForTransaction(tx) {
   let multiplier = 1;
 
   if (tx.type === 'gold') {
-    if (market.unit === 'chỉ') {
+    if (market.unit === 'phân') {
+      if (tx.unit === 'phan') multiplier = 1;
+      else if (tx.unit === 'chi') multiplier = 10;
+      else if (tx.unit === 'luong') multiplier = 100;
+      else if (tx.unit === 'gram') multiplier = 1 / 0.375;
+      else multiplier = 1;
+    } else if (market.unit === 'chỉ') {
       if (tx.unit === 'phan') multiplier = 0.1;
       else if (tx.unit === 'luong') multiplier = 10;
       else if (tx.unit === 'gram') multiplier = 1 / 3.75;
@@ -659,7 +665,11 @@ function renderGoldPricesGrid() {
     const linkHtml = data.url ? `<a href="${data.url}" target="_blank" class="official-link" title="Xem tại web chính thống"><i class="fas fa-external-link-alt"></i> Web</a>` : '';
 
     let subConvert = '';
-    if (data.unit === 'chỉ') {
+    if (data.unit === 'phân') {
+      const buyPerChi = formatVND(data.buy * 10);
+      const sellPerChi = formatVND(data.sell * 10);
+      subConvert = `<div style="font-size: 11px; color: #b8860b; margin-top: 5px; font-weight: 600;">👉 Quy đổi: ${buyPerChi} - ${sellPerChi} / chỉ (1 chỉ = 10 phân)</div>`;
+    } else if (data.unit === 'chỉ') {
       const buyPerPhan = formatVND(data.buy / 10);
       const sellPerPhan = formatVND(data.sell / 10);
       subConvert = `<div style="font-size: 11px; color: #b8860b; margin-top: 5px; font-weight: 600;">👉 Quy đổi: ${buyPerPhan} - ${sellPerPhan} / phân</div>`;
